@@ -1,0 +1,38 @@
+CC = nspire-gcc
+
+CFLAGS = -Os -std=c++98 -fdata-sections -ffunction-sections -fomit-frame-pointer -marm -march=armv5te -mtune=arm926ej-s -marm -I
+LDFLAGS = -nostdlib -Wl,--gc-sections -Wl,--as-needed -flto -lm
+OUTPUT = yape
+
+SOURCES = \
+archdep.cpp		\
+cpu.cpp	\
+diskfs.cpp \
+dos.cpp \
+drive.cpp \
+iec.cpp \
+interface.cpp		\
+keyboard.cpp \
+main.cpp \
+prg.cpp \
+serial.cpp	\
+tape.cpp \
+tcbm.cpp \
+tedmem.cpp	
+#bam.cpp			\
+#diskimg.cpp \
+OBJS = ${SOURCES:.cpp=.o}
+
+${OUTPUT}:${OBJS}
+	${CC} -o ${OUTPUT} ${SOURCES} ${CFLAGS} ${LDFLAGS} ${DEFINES} 
+	
+gen: 
+	genzehn --input ${OUTPUT} --output ${OUTPUT}.temp.tns --compress
+	make-prg ${OUTPUT}.temp.tns ${OUTPUT}.tns
+	rm ${OUTPUT}.temp.tns
+	rm ${OUTPUT}
+	
+	
+clean:
+	rm *.o
+	rm ${OUTPUT}
