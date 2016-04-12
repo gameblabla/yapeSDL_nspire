@@ -512,7 +512,6 @@ inline static void poll_events(void)
 						ted8360->keys->releasekey(120);
 					break;
 					default:
-						printf("event.key.keysym.sym %d\n", event.key.keysym.sym);
 						ted8360->keys->releasekey(event.key.keysym.sym&0x1FF);
 				}
 				break;
