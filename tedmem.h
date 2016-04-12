@@ -27,6 +27,7 @@ class KEYS;
 class TAP;
 class CTCBM;
 
+
 class TED: 
 public CSerial , public MemoryHandler 
 {
@@ -37,9 +38,11 @@ public CSerial , public MemoryHandler
 	TAP	*tap;
 	virtual void UpdateSerialState(unsigned char portval);
 	virtual void Reset();
+	
 	// read memory through memory decoder
   	virtual unsigned char Read(unsigned int addr);
   	virtual void Write(unsigned int addr, unsigned char value);
+  	
 	// read memory directly
 	unsigned char readDMA(unsigned int addr) { return Ram[addr]; }
 	// same as above but with writing

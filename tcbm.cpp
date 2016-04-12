@@ -8,7 +8,7 @@ void CFakeTCBM::Reset()
 	tia.pra = tia.prb = tia.prc = 0;	
 }
 
-Uint8 CFakeTCBM::Read(Uint32 addr)
+Uint8 CFakeTCBM::Read(unsigned int addr)
 {
 	unsigned char drive = (addr&0x0030)>>5;
 
@@ -35,7 +35,7 @@ Uint8 CFakeTCBM::Read(Uint32 addr)
 	}
 }
 
-void CFakeTCBM::Write( Uint32 addr, Uint8 data)
+void CFakeTCBM::Write( unsigned int addr, Uint8 data)
 {
 	unsigned int drive = (addr&0x0030)>>5;
 

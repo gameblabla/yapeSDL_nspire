@@ -14,6 +14,10 @@
 #define TITLE   "YAPESDL 0.32"
 #define NAME    "Yape for SDL 0.32.5"
 
+#ifdef _TINSPIRE
+#include <os.h>
+#endif
+
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -38,7 +42,7 @@ extern void FrameUpdate(void);
 
 // SDL stuff
 static SDL_Event		event;
-static SDL_Surface     *screen, *image, *surface;
+static SDL_Surface     *screen, *surface;
 static SDL_Palette		palette;
 static SDL_Color		*g_pal;
 static SDL_Rect			dest;
@@ -227,17 +231,19 @@ void init_palette()
 
 inline void FrameUpdate(void)
 {
-    SDL_Rect rc;
-
+    SDL_Rect rc, dest;
     rc.x = 64;
     rc.y = 36;
     rc.w = 384;
     rc.h = 288;
+    dest.x = 0;
+    dest.y = 0;
+    dest.w = 320;
+    dest.h = 240;
     
-	//SDL_BlitSurface( image, &rc , screen, NULL);
-	SDL_BlitSurface( image, &rc , surface , &dest);
-	SDL_BlitSurface( surface, NULL , screen ,NULL);
-	SDL_Flip ( screen );
+
+	SDL_BlitSurface( surface, &rc , screen , &dest);
+	SDL_Flip (screen);
 }
 
 /* ---------- Management of settings ---------- */
@@ -538,10 +544,10 @@ static void MachineInit()
 	ted8360->HookTCBM(tcbm);
 	tcbm_l->Reset();
 	iec->Reset();
-	fsdrive->Reset();
+	/*fsdrive->Reset();*/
 	CSerial::InitPorts();
 
-	uinterface = new UI(ted8360, screen, image, inipath);
+	uinterface = new UI(ted8360, screen, surface, inipath);
 }
 
 static void app_initialise()
@@ -549,12 +555,7 @@ static void app_initialise()
 	SDL_Init(SDL_INIT_VIDEO);
 	// set the appropriate video mode
 	//screen = SDL_SetVideoMode(456, 312, 8, SDL_SRCCOLORKEY|SDL_SWSURFACE  );
-	screen = SDL_SetVideoMode(320, 240, 8, SDL_SWSURFACE  );
-	if ( screen == NULL) {
-        fprintf(stderr, "Unable to set video mode\n");
-        exit(1);
-    }
-    
+	screen = SDL_SetVideoMode(320, 240, 16, SDL_SWSURFACE  );
     surface = SDL_CreateRGBSurface(0,456,312,8,0,0,0,0);
 
 	// set the window range to be updated
@@ -567,23 +568,13 @@ static void app_initialise()
 	init_palette();
 
 	// set colors to the screen buffer
-	int SDLresult = SDL_SetColors(screen, g_pal, 0, 256);
-
-	// set the backbuffer to the same format
-	image = SDL_DisplayFormat(surface);
-
-	// set the colors for the backbuffer too
-	if (image->format->palette!= NULL ) {
-        SDL_SetColors(surface,
-                      image->format->palette->colors, 0,
-                      image->format->palette->ncolors);
-    }
+	int SDLresult = SDL_SetColors(surface, g_pal, 0, 256);
 
 	// change the pointer to the pixeldata of the backbuffer
-	image->pixels = ted8360->screen;
+	surface->pixels = ted8360->screen;
 
-	if (SDL_EnableKeyRepeat(0, SDL_DEFAULT_REPEAT_INTERVAL))
-		fprintf(stderr,"Oops... could not set keyboard repeat rate.\n");
+	/*if (SDL_EnableKeyRepeat(0, SDL_DEFAULT_REPEAT_INTERVAL))
+		fprintf(stderr,"Oops... could not set keyboard repeat rate.\n");*/
 }
 
 /* ---------- MAIN ---------- */
@@ -602,17 +593,15 @@ int main(int argc, char *argv[])
 		// and then try to load the parameter as file
 		autostart_file(argv[1]);
 	}
-	ad_vsync_init();
-	/* ---------- MAIN LOOP ---------- */
-	unsigned int timeelapsed = SDL_GetTicks();
+	/*ad_vsync_init();*/
 	for (;;) {
 		// hook into the emulation loop if active
 			ted8360->ted_process();
 			poll_events();
 			/*if (g_inDebug)
 				DebugInfo();*/
-			ad_vsync(g_50Hz );
-			ShowFrameRate();
+			/*ad_vsync(g_50Hz );*/
+			/*ShowFrameRate();*/
 			/*if (g_FrameRate)
 				ShowFrameRate();*/
 			// frame update

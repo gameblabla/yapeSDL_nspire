@@ -1,6 +1,6 @@
 CXX = g++
 
-CFLAGS = -Ofast -fdata-sections -ffunction-sections -fomit-frame-pointer -I. -Wunused-result
+CFLAGS = -O0 -g -fdata-sections -ffunction-sections -fomit-frame-pointer -I. -Wunused-result
 LDFLAGS = -lSDL -Wl,--gc-sections -Wl,--as-needed -flto -lm
 OUTPUT = yapeSDL
 

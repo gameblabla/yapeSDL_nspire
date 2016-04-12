@@ -1,6 +1,6 @@
 CC = nspire-gcc
 
-CFLAGS = -Os -std=c++98 -fdata-sections -ffunction-sections -fomit-frame-pointer -marm -march=armv5te -mtune=arm926ej-s -marm -I
+CFLAGS = -Ofast -std=c++98 -fdata-sections -ffunction-sections -fomit-frame-pointer -marm -march=armv5te -mtune=arm926ej-s -marm -I
 LDFLAGS = -nostdlib -Wl,--gc-sections -Wl,--as-needed -flto -lm
 OUTPUT = yape
 
